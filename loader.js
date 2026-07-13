@@ -13,7 +13,7 @@
     openDomains: ['REPLACE_ME'],
     modules: [
       { id: 'dataset-shell', type: 'shell', url: '/process/center/jump/REPLACE_ME/SHELL' },
-      { id: 'cmb.data-agent', type: 'scene', url: '/process/center/jump/REPLACE_ME/DATA_AGENT' },
+      { id: 'cmb.data-agent', type: 'scene', url: 'https://cdn.jsdelivr.net/gh/aziiiii5859-lab/testzmc@0b606e5426bba250f68647dbc25e8fbb283e4ee0/data_agent.js' },
       { id: 'demo.describe', type: 'scene', url: '/process/center/jump/REPLACE_ME/DESCRIBE' },
     ],
   };
