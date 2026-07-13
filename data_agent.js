@@ -10,8 +10,9 @@
   //   false = 经观远 /api/forward/as-proxy 转发（默认，绕开跨域）。
   // localhost 恒直连，不受此开关影响。
   var DIRECT_CONNECT = _RUNTIME_CONFIG.directConnect === true;
-  var _MARKED_URL_INTRANET = _RUNTIME_CONFIG.markedUrl || 'http://s3gw.paas.cmbchina.cn/lt3602-process-center-dev-1255000118/636d625f61692fe9929fe6988ee881aa2f333232393035/e04ae0bf88da292e65e1e677394f6058';
-  var _CHART_URL_INTRANET  = _RUNTIME_CONFIG.chartUrl || 'http://s3gw.paas.cmbchina.cn/lt3602-process-center-dev-1255000118/636d625f61692fe9929fe6988ee881aa2f333232393035/e6452e2b454b091f857a45cce7624eae';
+  // 公网 PoC 默认使用固定版本 CDN；可通过运行时配置覆盖，避免使用 latest 带来兼容性漂移。
+  var _MARKED_URL_CDN = _RUNTIME_CONFIG.markedUrl || 'https://cdn.jsdelivr.net/npm/marked@15.0.12/marked.min.js';
+  var _CHART_URL_CDN  = _RUNTIME_CONFIG.chartUrl || 'https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js';
 
   // ── 域名映射：办公网 → 业务网 ──────────────────────────────────────────────
   // 问题：前端在办公网（.com），agent 后端在业务网（.cn），agent 拿着办公网域名
@@ -1259,10 +1260,9 @@
       dsId: context.datasetId,
       biBaseUrl: _resolveBiBaseUrl(context.pageOrigin),
     };
-    var _isLocal = /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?/.test(AGENT_URL);
     try {
-      await _loadScript(_isLocal ? AGENT_URL + '/frontend/marked.min.js' : _MARKED_URL_INTRANET, 'marked');
-      await _loadScript(_isLocal ? AGENT_URL + '/frontend/chart.min.js'  : _CHART_URL_INTRANET,  'Chart');
+      await _loadScript(_MARKED_URL_CDN, 'marked');
+      await _loadScript(_CHART_URL_CDN, 'Chart');
     } catch (e) {
       console.error('[GDA] Failed to load dependencies:', e);
       return false;
