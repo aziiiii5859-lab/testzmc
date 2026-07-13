@@ -4,7 +4,7 @@
 
   // ── Configuration ─────────────────────────────────────────────────────────
   var _RUNTIME_CONFIG = window.__GD_DATA_AGENT_CONFIG__ || {};
-  var AGENT_URL = _RUNTIME_CONFIG.agentUrl || 'https://yf-agent.paas.cmbchina.cn';
+  var AGENT_URL = _RUNTIME_CONFIG.agentUrl || 'http://localhost:8000';
   // 直连开关（便于验证单进程合并部署）：
   //   true  = 浏览器直接请求 AGENT_URL（同源反代 /agentsvc/data 或 CSP 允许时用）；
   //   false = 经观远 /api/forward/as-proxy 转发（默认，绕开跨域）。
