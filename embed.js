@@ -11,6 +11,9 @@
   var DIRECT_CONNECT = false;
   var _MARKED_URL_INTRANET = 'http://s3gw.paas.cmbchina.cn/lt3602-process-center-dev-1255000118/636d625f61692fe9929fe6988ee881aa2f333232393035/e04ae0bf88da292e65e1e677394f6058';
   var _CHART_URL_INTRANET  = 'http://s3gw.paas.cmbchina.cn/lt3602-process-center-dev-1255000118/636d625f61692fe9929fe6988ee881aa2f333232393035/e6452e2b454b091f857a45cce7624eae';
+  // CDN 回退（内网 S3 不可达时用，比如本地调试或非办公网环境测试）
+  var _MARKED_URL_CDN = 'https://cdn.jsdelivr.net/gh/aziiiii5859-lab/testzmc/marked.min.js';
+  var _CHART_URL_CDN  = 'https://cdn.jsdelivr.net/gh/aziiiii5859-lab/testzmc/chart.min.js';
 
   // ── 域名映射：办公网 → 业务网 ──────────────────────────────────────────────
   // 问题：前端在办公网（.com），agent 后端在业务网（.cn），agent 拿着办公网域名
@@ -1257,10 +1260,15 @@
     var _isLocal = /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?/.test(AGENT_URL);
     try {
       await _loadScript(_isLocal ? AGENT_URL + '/frontend/marked.min.js' : _MARKED_URL_INTRANET, 'marked');
-      await _loadScript(_isLocal ? AGENT_URL + '/frontend/chart.min.js'  : _CHART_URL_INTRANET,  'Chart');
     } catch (e) {
-      console.error('[GDA] Failed to load dependencies:', e);
-      throw e;   // 交给 shell.js 的 mount 失败兜底渲染
+      console.warn('[GDA] marked 首选源加载失败，尝试 CDN 回退');
+      await _loadScript(_MARKED_URL_CDN, 'marked');
+    }
+    try {
+      await _loadScript(_isLocal ? AGENT_URL + '/frontend/chart.min.js' : _CHART_URL_INTRANET, 'Chart');
+    } catch (e) {
+      console.warn('[GDA] chart.js 首选源加载失败，尝试 CDN 回退');
+      await _loadScript(_CHART_URL_CDN, 'Chart');
     }
     marked.use({ gfm: true, breaks: true });
     _biToken = await _fetchToken();
