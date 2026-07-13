@@ -1,60 +1,123 @@
+/**
+ * Dataset multi-scene public loader.
+ *
+ * 生产部署时，观远代码框只保留本文件。Shell 与各场景独立上传到流程中心，
+ * 然后仅替换 MODULES 中对应的 jump URL。
+ */
 (function () {
   'use strict';
-  // 生产合规 loader：观远平台代码框不允许粘贴完整源码，只放这一小段。真正的
-  // shell.js / embed.js（以及后续接入的其他团队场景文件）各自上传到观远「流程中心」
-  // 文件管理后拿到 jump 地址，这里用 <script src> 动态加载（写法对齐平台参考代码）。
-  //
-  // 相比旧版 embed-loader.js（只加载一个文件），这里泛化成一份清单：每个团队一行，
-  // 各自迭代时只改自己那一行 URL、重新上传自己的文件，不影响其他团队的代码和发布节奏。
-  // 加载顺序不重要——shell.js 的 registerTab 走注册队列，谁先加载完都能正常工作。
 
-  // 角色白名单：仅 admin 或 editor 可见（GD.getUser().role 为数组，如 ["admin"]）
-  var ALLOWED_ROLES = ['admin', 'editor'];
+  var LOADER_VERSION = '1.0.0';
+  var DEFAULT_CONFIG = {
+    allowedRoles: ['admin', 'editor'],
+    openDomains: ['REPLACE_ME'],
+    modules: [
+      { id: 'dataset-shell', type: 'shell', url: '/process/center/jump/REPLACE_ME/SHELL' },
+      { id: 'cmb.data-agent', type: 'scene', url: '/process/center/jump/REPLACE_ME/DATA_AGENT' },
+      { id: 'demo.describe', type: 'scene', url: '/process/center/jump/REPLACE_ME/DESCRIBE' },
+    ],
+  };
 
-  // 灰度白名单：只在名单内的 domId（分行/租户）生效，逐步扩量；留空数组 = 不限制、全量生效
-  var OPEN_DOMAINS = ['REPLACE_ME'];
+  // 本地预览页可在加载 loader.js 前写入该配置；生产环境通常直接修改上面的清单。
+  var config = Object.assign({}, DEFAULT_CONFIG, window.__GD_DATASET_SCENE_CONFIG__ || {});
+  config.modules = (window.__GD_DATASET_SCENE_CONFIG__ || {}).modules || DEFAULT_CONFIG.modules;
 
-  // 上线前改：这里用 jsdelivr CDN 地址方便本地/测试验证；生产发布时改为观远「流程中心」
-  // 上传后生成的 jump 同源相对路径（天然免跨域+免手动维护缓存版本号，见 docs/内网部署实录.md）。
-  // 每次重新上传 CDN 后可能需要等 jsdelivr 刷新缓存（purge 或加 ?v= 参数）。
-  // 新增场景只需要在这里加一行，不用改其他团队的条目。
-  var CDN_BASE = 'https://cdn.jsdelivr.net/gh/aziiiii5859-lab/testzmc/';
-  var FILES = [
-    { name: 'shell',      src: CDN_BASE + 'shell.js' },
-    { name: 'data_agent', src: CDN_BASE + 'embed.js' }
-    // { name: '<其他团队场景标识>', src: '<自己文件的 CDN/jump 地址>' },
-  ];
+  function createHub(existing) {
+    var hub = existing || {};
+    if (hub.protocolVersion) return hub;
 
-  if (window.__GDA_LOADER_LOADED__) return;   // 防平台重复执行代码框脚本时二次注入
-  window.__GDA_LOADER_LOADED__ = true;
+    var scenes = hub._queuedScenes || [];
+    var sceneIndex = {};
+    var listeners = [];
+    var moduleStatus = {};
 
-  GD.on('gd-ready', async function () {
-    var info;
-    try {
-      // GD.getUser() 实测不保证同步返回，且字段可能在 .$ 下——防御性处理
-      var u = await GD.getUser();
-      info = (u && u.$) || u || {};
-    } catch (e) { /* 取不到用户信息就不加载 */ return; }
-
-    // 角色权限检查：仅 admin 或 editor 可见（门控粒度为整体——要么都加载、要么都不加载；
-    // 如果某个场景需要自己单独控制可见性，可以在自己 mount() 内部再判断一次并跳过注册）
-    var roles = info.role || [];
-    if (!roles.length || !roles.some(function (r) { return ALLOWED_ROLES.indexOf(r) !== -1; })) return;
-
-    if (OPEN_DOMAINS.length) {
-      var domId = info.domId || '';
-      if (OPEN_DOMAINS.indexOf(domId) === -1) return;
-    }
-
-    FILES.forEach(function (file) {
-      var script = document.createElement('script');
-      script.src = file.src;
-      script.async = true;
-      script.crossOrigin = 'anonymous';
-      script.onerror = function () {
-        console.error('[GDA loader] ' + file.name + ' 加载失败：' + file.src);
+    hub.protocolVersion = 1;
+    hub.loaderVersion = LOADER_VERSION;
+    hub.registerScene = function (definition) {
+      if (!definition || typeof definition.id !== 'string' || !definition.id) {
+        console.error('[dataset-loader] 场景注册失败：缺少有效 id');
+        return false;
+      }
+      if (sceneIndex[definition.id]) {
+        console.error('[dataset-loader] 场景 id 重复，已拒绝：' + definition.id);
+        return false;
+      }
+      sceneIndex[definition.id] = definition;
+      scenes.push(definition);
+      listeners.slice().forEach(function (listener) {
+        try { listener(definition); } catch (e) { console.error('[dataset-loader] 场景监听器异常', e); }
+      });
+      return true;
+    };
+    hub.subscribe = function (listener) {
+      if (typeof listener !== 'function') return function () {};
+      listeners.push(listener);
+      return function () {
+        var index = listeners.indexOf(listener);
+        if (index >= 0) listeners.splice(index, 1);
       };
-      document.head.appendChild(script);
-    });
-  });
+    };
+    hub.getScenes = function () { return scenes.slice(); };
+    hub.setModuleStatus = function (id, status, detail) {
+      moduleStatus[id] = { status: status, detail: detail || '', updatedAt: Date.now() };
+    };
+    hub.getModuleStatus = function () { return Object.assign({}, moduleStatus); };
+    return hub;
+  }
+
+  var hub = (window.__GD_DATASET_SCENE_HUB__ = createHub(window.__GD_DATASET_SCENE_HUB__));
+  if (hub._loaderStarted) return;
+  hub._loaderStarted = true;
+
+  function loadModule(module) {
+    if (!module || !module.id || !module.url) return;
+    if (document.querySelector('script[data-dataset-module="' + module.id + '"]')) return;
+
+    hub.setModuleStatus(module.id, 'loading', module.url);
+    var script = document.createElement('script');
+    script.src = module.url;
+    script.async = true;
+    script.dataset.datasetModule = module.id;
+    script.dataset.datasetModuleType = module.type || 'scene';
+    script.onload = function () { hub.setModuleStatus(module.id, 'loaded', module.url); };
+    script.onerror = function () {
+      hub.setModuleStatus(module.id, 'error', module.url);
+      console.error('[dataset-loader] 模块加载失败：' + module.id + ' — ' + module.url);
+    };
+    document.head.appendChild(script);
+  }
+
+  function loadAll() {
+    (config.modules || []).forEach(loadModule);
+  }
+
+  async function isAllowed() {
+    if (config.skipAuth) return true;
+    if (typeof GD === 'undefined' || typeof GD.getUser !== 'function') return false;
+    try {
+      var value = await GD.getUser();
+      var user = (value && value.$) || value || {};
+      var roles = user.role || [];
+      if (config.allowedRoles && config.allowedRoles.length &&
+          !roles.some(function (role) { return config.allowedRoles.indexOf(role) >= 0; })) return false;
+      if (config.openDomains && config.openDomains.length &&
+          config.openDomains.indexOf(user.domId || '') < 0) return false;
+      return true;
+    } catch (e) {
+      console.error('[dataset-loader] 获取用户信息失败，模块未加载', e);
+      return false;
+    }
+  }
+
+  async function start() {
+    if (await isAllowed()) loadAll();
+  }
+
+  if (config.skipAuth) {
+    start();
+  } else if (typeof GD !== 'undefined' && typeof GD.on === 'function') {
+    GD.on('gd-ready', start);
+  } else {
+    console.warn('[dataset-loader] GD SDK 不可用，模块未加载');
+  }
 })();

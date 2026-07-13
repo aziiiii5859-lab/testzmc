@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Dataset multi-scene shell preview</title>
+</head>
+<body>
+  <h2 style="font-family:sans-serif;color:#475569">数据集多场景 Shell 本地预览</h2>
+  <p style="font-family:sans-serif;color:#64748b;line-height:1.7">
+    平台只注入 loader.js；loader 再并行加载 Shell、data_agent 和其他团队场景。<br>
+    点击右下角 AI 按钮验证懒挂载和 Tab 状态保留。发送真实问题需要可访问 Agent 服务。
+  </p>
+  <script>
+    window.__GD_DATASET_SCENE_TEST_CONTEXT__ = {
+      datasetId: 'preview-dataset-001',
+      pageOrigin: location.origin,
+      user: { loginId: 'preview-user', domId: 'preview-domain', role: ['admin'] },
+      getBiToken: function () { return Promise.resolve('preview-token'); }
+    };
+    window.__GD_DATA_AGENT_CONFIG__ = {
+      markedUrl: '../../apps/data_agent/frontend/marked.min.js',
+      chartUrl: '../../apps/data_agent/frontend/chart.min.js'
+    };
+    window.__GD_DATASET_SCENE_CONFIG__ = {
+      skipAuth: true,
+      modules: [
+        { id: 'dataset-shell', type: 'shell', url: 'shell.js' },
+        { id: 'cmb.data-agent', type: 'scene', url: 'data_agent.js' },
+        { id: 'demo.describe', type: 'scene', url: 'tab-describe.js' }
+      ]
+    };
+  </script>
+  <script src="loader.js"></script>
+</body>
+</html>
