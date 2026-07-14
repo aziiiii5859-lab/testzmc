@@ -12,36 +12,46 @@
 
   var CSS = [
     '#gdshell-btn{position:fixed;right:32px;bottom:32px;width:52px;height:52px;border:0;border-radius:50%;',
-    'display:none;align-items:center;justify-content:center;background:linear-gradient(135deg,#2563eb,#1d4ed8);',
-    'color:#fff;cursor:pointer;z-index:9997;box-shadow:0 4px 16px rgba(37,99,235,.35);font-weight:700}',
-    '#gdshell-btn:hover{transform:scale(1.06)}',
-    '#gdshell-overlay{position:fixed;inset:0;background:rgba(0,0,0,.15);opacity:0;pointer-events:none;',
+    'display:none;align-items:center;justify-content:center;background:#065bce;color:#fff;cursor:pointer;z-index:9997;',
+    'box-shadow:0 4px 16px rgba(6,91,206,.28);font-size:14px;font-weight:600;transition:transform .2s,box-shadow .2s}',
+    '#gdshell-btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(6,91,206,.36)}',
+    '#gdshell-overlay{position:fixed;inset:0;background:rgba(0,0,0,.16);opacity:0;pointer-events:none;',
     'transition:opacity .25s;z-index:9998}',
     '#gdshell-overlay.open{opacity:1;pointer-events:auto}',
-    '#gdshell-drawer{position:fixed;top:56px;right:0;bottom:30px;width:min(680px,calc(100vw - 24px));',
-    'display:flex;flex-direction:column;background:#fff;transform:translateX(100%);transition:transform .25s;',
-    'z-index:9999;box-shadow:-4px 0 24px rgba(37,99,235,.12);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;',
-    'color:#1e2a4a;overflow:hidden}',
+    '#gdshell-drawer{position:fixed;top:101px;right:0;bottom:0;width:min(800px,calc(100vw - 24px));display:flex;',
+    'background:#fff;transform:translateX(100%);transition:transform .25s;z-index:9999;',
+    'box-shadow:-2px 0 12px rgba(0,0,0,.10);font-family:"PingFang SC","Microsoft YaHei",Arial,sans-serif;',
+    'color:#202020;overflow:hidden}',
     '#gdshell-drawer.open{transform:translateX(0)}',
     '#gdshell-drawer *,#gdshell-drawer *::before,#gdshell-drawer *::after{box-sizing:border-box}',
-    '#gdshell-header{height:50px;display:flex;align-items:flex-end;gap:12px;padding:0 12px 0 16px;',
-    'border-bottom:1px solid #e5e7eb;background:#fff;flex-shrink:0}',
-    '#gdshell-title{align-self:center;font-size:14px;font-weight:700;color:#1d4ed8;white-space:nowrap}',
-    '#gdshell-tabs{display:flex;align-self:stretch;align-items:flex-end;gap:4px;flex:1;overflow-x:auto}',
-    '.gdshell-tab{height:42px;padding:0 14px;border:0;border-bottom:2px solid transparent;background:transparent;',
-    'color:#64748b;cursor:pointer;white-space:nowrap;font-size:14px}',
-    '.gdshell-tab.active{color:#2563eb;border-bottom-color:#2563eb;font-weight:600}',
-    '.gdshell-tab:disabled{cursor:not-allowed;color:#cbd5e1}',
-    '#gdshell-close{align-self:center;width:28px;height:28px;border:0;border-radius:50%;background:#eef2ff;',
-    'color:#64748b;cursor:pointer;font-size:18px;line-height:1}',
-    '#gdshell-content{position:relative;flex:1;min-height:0;overflow:hidden;background:#fafbfd}',
+    '#gdshell-sidebar{width:180px;display:flex;flex-direction:column;flex:none;background:#fff;border-right:1px solid #f0f0f0}',
+    '#gdshell-brand{height:76px;display:flex;align-items:center;padding:0 20px;gap:10px;font-size:16px;font-weight:600;',
+    'border-bottom:1px solid #f5f5f5;white-space:nowrap}',
+    '#gdshell-brand-mark{width:24px;height:24px;display:grid;place-items:center;border-radius:6px;background:linear-gradient(135deg,#23c9f1,#7b76f5);',
+    'color:#fff;font-size:12px;font-weight:700}',
+    '#gdshell-tabs{display:flex;flex:1;flex-direction:column;gap:4px;padding:28px 10px;overflow-y:auto}',
+    '.gdshell-tab{position:relative;width:100%;min-height:44px;padding:0 14px 0 40px;border:0;border-radius:4px;background:transparent;',
+    'color:#202020;cursor:pointer;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:14px;transition:background .15s,color .15s}',
+    '.gdshell-tab::before{content:"";position:absolute;left:16px;top:50%;width:15px;height:15px;transform:translateY(-50%);border:1.5px solid currentColor;border-radius:3px;opacity:.72}',
+    '.gdshell-tab:hover{background:#f7f7f7}',
+    '.gdshell-tab.active{background:#f2f2f2;color:#202020;font-weight:600}',
+    '.gdshell-tab:disabled{cursor:not-allowed;color:#bfbfbf}',
+    '#gdshell-exit{height:64px;display:flex;align-items:center;gap:10px;padding:0 20px;border:0;border-top:1px solid #f0f0f0;background:#fff;',
+    'color:#202020;cursor:pointer;text-align:left;font-size:14px}',
+    '#gdshell-exit::before{content:"↪";font-size:22px;font-weight:300;line-height:1}',
+    '#gdshell-workspace{display:flex;flex:1;min-width:0;flex-direction:column;background:#fff}',
+    '#gdshell-header{height:76px;display:flex;align-items:center;justify-content:space-between;padding:0 16px 0 24px;border-bottom:1px solid #f0f0f0;flex:none}',
+    '#gdshell-title{font-size:16px;font-weight:600;color:#202020;white-space:nowrap}',
+    '#gdshell-close{width:28px;height:28px;border:1px solid #ebebeb;border-radius:4px;background:#fff;color:#595959;cursor:pointer;font-size:20px;line-height:1}',
+    '#gdshell-close:hover{background:#f7f7f7;color:#202020}',
+    '#gdshell-content{position:relative;flex:1;min-height:0;overflow:hidden;background:#fff}',
     '.gdshell-pane{position:absolute;inset:0;display:none;overflow:hidden}',
     '.gdshell-pane.active{display:block}',
     '.gdshell-root{width:100%;height:100%;overflow:hidden}',
     '.gdshell-state{height:100%;display:flex;align-items:center;justify-content:center;padding:24px;',
-    'text-align:center;color:#94a3b8;font-size:13px}',
-    '.gdshell-error{color:#dc2626}',
-    '@media(max-width:720px){#gdshell-drawer{top:0;bottom:0;width:100vw}#gdshell-btn{right:18px;bottom:18px}}',
+    'text-align:center;color:#8c8c8c;font-size:13px}',
+    '.gdshell-error{color:#cf1322}',
+    '@media(max-width:720px){#gdshell-drawer{top:0;width:100vw}#gdshell-sidebar{width:152px}#gdshell-brand{padding:0 14px;font-size:14px}#gdshell-tabs{padding:20px 8px}.gdshell-tab{padding-left:34px}#gdshell-btn{right:18px;bottom:18px}}',
   ].join('');
 
   var tabs = {};
@@ -210,6 +220,7 @@
       if (previous.instance && typeof previous.instance.deactivate === 'function') previous.instance.deactivate();
     }
     activeId = id;
+    if (ui.title) ui.title.textContent = next.definition.title || next.definition.id;
     next.button.classList.add('active');
     next.pane.classList.add('active');
     if (next.status === 'registered') mount(next);
@@ -237,6 +248,7 @@
     ui.button.style.display = visible.length ? 'flex' : 'none';
     if ((!activeId || !tabs[activeId] || tabs[activeId].button.style.display === 'none') && visible.length) {
       activeId = visible[0].definition.id;
+      if (ui.title) ui.title.textContent = visible[0].definition.title || visible[0].definition.id;
       visible[0].button.classList.add('active');
       visible[0].pane.classList.add('active');
       if (ui.drawer.classList.contains('open')) mount(visible[0]);
@@ -309,21 +321,29 @@
     ui.drawer = document.createElement('aside');
     ui.drawer.id = 'gdshell-drawer';
     ui.drawer.innerHTML =
-      '<header id="gdshell-header">' +
-      '  <span id="gdshell-title">数据集智能助手</span>' +
-      '  <nav id="gdshell-tabs" role="tablist"></nav>' +
-      '  <button id="gdshell-close" type="button" aria-label="关闭">×</button>' +
-      '</header>' +
-      '<main id="gdshell-content"></main>';
+      '<aside id="gdshell-sidebar">' +
+      '  <div id="gdshell-brand"><span id="gdshell-brand-mark">AI</span><span>数据集助手</span></div>' +
+      '  <nav id="gdshell-tabs" role="tablist" aria-label="助手场景"></nav>' +
+      '  <button id="gdshell-exit" type="button">退出插件</button>' +
+      '</aside>' +
+      '<section id="gdshell-workspace">' +
+      '  <header id="gdshell-header">' +
+      '    <span id="gdshell-title">数据集助手</span>' +
+      '    <button id="gdshell-close" type="button" aria-label="关闭助手">×</button>' +
+      '  </header>' +
+      '  <main id="gdshell-content"></main>' +
+      '</section>';
 
     document.body.appendChild(ui.button);
     document.body.appendChild(ui.overlay);
     document.body.appendChild(ui.drawer);
     ui.tabs = ui.drawer.querySelector('#gdshell-tabs');
     ui.content = ui.drawer.querySelector('#gdshell-content');
+    ui.title = ui.drawer.querySelector('#gdshell-title');
     ui.button.onclick = openShell;
     ui.overlay.onclick = closeShell;
     ui.drawer.querySelector('#gdshell-close').onclick = closeShell;
+    ui.drawer.querySelector('#gdshell-exit').onclick = closeShell;
     document.addEventListener('keydown', function (event) { if (event.key === 'Escape') closeShell(); });
 
     hub.getScenes().forEach(addScene);
