@@ -30,10 +30,10 @@
     '#gdshell-drawer.open{transform:translateX(0)}',
     '#gdshell-drawer *,#gdshell-drawer *::before,#gdshell-drawer *::after{box-sizing:border-box}',
     '#gdshell-sidebar{width:180px;display:flex;flex-direction:column;flex:none;background:#fff;border-right:1px solid #f0f0f0}',
-    '#gdshell-brand{height:76px;display:flex;align-items:center;padding:0 20px;gap:10px;font-size:16px;font-weight:600;',
+    '#gdshell-brand{height:76px;display:flex;align-items:center;padding:0 14px;gap:8px;font-size:16px;font-weight:600;',
     'border-bottom:1px solid #f5f5f5;white-space:nowrap}',
     '#gdshell-brand-mark{width:24px;height:24px;flex:none}',
-    '#gdshell-brand-toggle-frame{width:26px;height:26px;display:grid;place-items:center;flex:none;margin-left:8px;border:1px solid #d9d9d9;border-radius:4px;background:transparent}',
+    '#gdshell-brand-toggle-frame{width:26px;height:26px;display:grid;place-items:center;flex:none;margin-left:10px;border:1px solid #d9d9d9;border-radius:4px;background:transparent}',
     '#gdshell-brand-toggle{width:16px;height:16px;object-fit:contain}',
     '#gdshell-tabs{display:flex;flex:1;flex-direction:column;gap:4px;padding:28px 10px;overflow-y:auto}',
     '.gdshell-tab{position:relative;width:100%;min-height:44px;padding:0 14px 0 40px;border:0;border-radius:4px;background:transparent;',
@@ -54,7 +54,7 @@
     '.gdshell-state{height:100%;display:flex;align-items:center;justify-content:center;padding:24px;',
     'text-align:center;color:#8c8c8c;font-size:13px}',
     '.gdshell-error{color:#cf1322}',
-    '@media(max-width:720px){#gdshell-drawer{top:0;width:100vw}#gdshell-sidebar{width:152px}#gdshell-brand{padding:0 14px;font-size:14px}#gdshell-tabs{padding:20px 8px}.gdshell-tab{padding-left:34px}#gdshell-btn{right:18px;bottom:18px}}',
+    '@media(max-width:720px){#gdshell-drawer{top:0;width:100vw}#gdshell-sidebar{width:152px}#gdshell-brand{font-size:14px}#gdshell-tabs{padding:20px 8px}.gdshell-tab{padding-left:34px}#gdshell-btn{right:18px;bottom:18px}}',
   ].join('');
 
   var tabs = {};
