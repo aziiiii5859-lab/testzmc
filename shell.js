@@ -33,7 +33,8 @@
     '#gdshell-brand{height:76px;display:flex;align-items:center;padding:0 20px;gap:10px;font-size:16px;font-weight:600;',
     'border-bottom:1px solid #f5f5f5;white-space:nowrap}',
     '#gdshell-brand-mark{width:24px;height:24px;flex:none}',
-    '#gdshell-brand-toggle{width:26px;height:26px;margin-left:8px;object-fit:contain}',
+    '#gdshell-brand-toggle-frame{width:26px;height:26px;display:grid;place-items:center;flex:none;margin-left:8px;border:1px solid #d9d9d9;border-radius:4px;background:transparent}',
+    '#gdshell-brand-toggle{width:16px;height:16px;object-fit:contain}',
     '#gdshell-tabs{display:flex;flex:1;flex-direction:column;gap:4px;padding:28px 10px;overflow-y:auto}',
     '.gdshell-tab{position:relative;width:100%;min-height:44px;padding:0 14px 0 40px;border:0;border-radius:4px;background:transparent;',
     'color:#202020;cursor:pointer;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:14px;transition:background .15s,color .15s}',
@@ -45,9 +46,9 @@
     '#gdshell-exit{height:64px;display:flex;align-items:center;gap:10px;padding:0 20px;border:0;border-top:1px solid #f0f0f0;background:#fff;',
     'color:#202020;cursor:pointer;text-align:left;font-size:14px}',
     '#gdshell-exit::before{content:"↪";font-size:22px;font-weight:300;line-height:1}',
-    '#gdshell-workspace{display:flex;flex:1;min-width:0;flex-direction:column;background:#fff}',
-    '#gdshell-content{position:relative;flex:1;min-height:0;overflow:hidden;background:#fff}',
-    '.gdshell-pane{position:absolute;inset:0;display:none;overflow:hidden}',
+    '#gdshell-workspace{display:flex;flex:1;min-width:0;flex-direction:column;background:#fafbfd}',
+    '#gdshell-content{position:relative;flex:1;min-height:0;overflow:hidden;background:#fafbfd}',
+    '.gdshell-pane{position:absolute;inset:12px;display:none;overflow:hidden;background:#fff;box-shadow:0 2px 4px rgba(0,0,0,.20)}',
     '.gdshell-pane.active{display:block}',
     '.gdshell-root{width:100%;height:100%;overflow:hidden}',
     '.gdshell-state{height:100%;display:flex;align-items:center;justify-content:center;padding:24px;',
@@ -326,7 +327,7 @@
       '  <div id="gdshell-brand">' +
       '    <img id="gdshell-brand-mark" src="' + BRAND_ICON + '" alt="">' +
       '    <span>数据集助手</span>' +
-      '    <img id="gdshell-brand-toggle" src="' + BRAND_TOGGLE_ICON + '" alt="">' +
+      '    <span id="gdshell-brand-toggle-frame"><img id="gdshell-brand-toggle" src="' + BRAND_TOGGLE_ICON + '" alt=""></span>' +
       '  </div>' +
       '  <nav id="gdshell-tabs" role="tablist" aria-label="助手场景"></nav>' +
       '  <button id="gdshell-exit" type="button">退出插件</button>' +
