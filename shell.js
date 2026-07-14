@@ -47,7 +47,7 @@
     '.gdshell-tab::before{content:"";position:absolute;left:16px;top:50%;width:15px;height:15px;transform:translateY(-50%);border:1.5px solid currentColor;border-radius:3px;opacity:.72}',
     '.gdshell-tab:hover{background:#f7f7f7}',
     '.gdshell-tab.active{background:#f2f2f2;color:#202020;font-weight:600}',
-    '.gdshell-tab.gdshell-tab-analysis.active::before{width:20px;height:18px;border:0;border-radius:0;opacity:1;background:url("' + ANALYSIS_ICON + '") center/contain no-repeat}',
+    '.gdshell-tab.gdshell-tab-analysis.active::before{width:20px;height:18px;border:0;border-radius:0;opacity:1;background:url("' + BRAND_ICON + '") center/contain no-repeat}',
     '.gdshell-tab:disabled{cursor:not-allowed;color:#bfbfbf}',
     '#gdshell-exit{height:64px;display:flex;align-items:center;gap:10px;padding:0 20px;border:0;border-top:1px solid #f0f0f0;background:#fff;',
     'color:#202020;cursor:pointer;text-align:left;font-size:14px}',
