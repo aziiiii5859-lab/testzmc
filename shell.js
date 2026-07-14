@@ -22,7 +22,7 @@
     '#gdshell-btn.gdshell-awaiting-host{display:none!important}',
     '#gdshell-btn:hover{background:#0753b9}',
     'nav.ant-breadcrumb.gdshell-launcher-host{display:flex;align-items:center}',
-    '#gdshell-btn.gdshell-inline{position:static;width:auto;min-width:104px;height:32px;margin:0 15px 0 auto;padding:0 10px;gap:6px;flex-shrink:0;',
+    '#gdshell-btn.gdshell-inline{position:static;width:auto;min-width:104px;height:32px;margin:0 25px 0 auto;padding:0 10px;gap:6px;flex-shrink:0;',
     'border:1px solid #d9d9d9;border-radius:4px;background:#fff;color:#202020;box-shadow:none;font-size:13px;transform:none}',
     '#gdshell-btn.gdshell-inline img{width:20px;height:20px;flex:none}',
     '#gdshell-btn.gdshell-inline:hover{transform:none;box-shadow:none;background:#f7f7f7}',
