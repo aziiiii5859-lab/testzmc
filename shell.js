@@ -22,9 +22,10 @@
     '#gdshell-btn.gdshell-awaiting-host{display:none!important}',
     '#gdshell-btn:hover{background:#0753b9}',
     'nav.ant-breadcrumb.gdshell-launcher-host{display:flex;align-items:center}',
-    '#gdshell-btn.gdshell-inline{position:static;width:32px;height:32px;margin-left:auto;flex-shrink:0;border-radius:4px;',
-    'box-shadow:none;font-size:12px;transform:none}',
-    '#gdshell-btn.gdshell-inline:hover{transform:none;box-shadow:none;background:#0753b9}',
+    '#gdshell-btn.gdshell-inline{position:static;width:auto;min-width:104px;height:32px;margin-left:auto;padding:0 10px;gap:6px;flex-shrink:0;',
+    'border:1px solid #d9d9d9;border-radius:4px;background:#fff;color:#202020;box-shadow:none;font-size:13px;transform:none}',
+    '#gdshell-btn.gdshell-inline img{width:20px;height:18px;flex:none}',
+    '#gdshell-btn.gdshell-inline:hover{transform:none;box-shadow:none;background:#f7f7f7}',
     '#gdshell-overlay{position:fixed;inset:0;background:rgba(0,0,0,.16);opacity:0;pointer-events:none;',
     'transition:opacity .25s;z-index:9998}',
     '#gdshell-overlay.open{opacity:1;pointer-events:auto}',
@@ -374,8 +375,8 @@
     ui.button.id = 'gdshell-btn';
     ui.button.className = 'gdshell-awaiting-host';
     ui.button.type = 'button';
-    ui.button.textContent = 'AI';
-    ui.button.title = '数据集智能场景';
+    ui.button.innerHTML = '<img src="' + ANALYSIS_ICON + '" alt=""><span>数据集助手</span>';
+    ui.button.title = '数据集助手';
 
     ui.overlay = document.createElement('div');
     ui.overlay.id = 'gdshell-overlay';
