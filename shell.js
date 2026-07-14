@@ -27,23 +27,20 @@
     '#gdshell-sidebar{width:180px;display:flex;flex-direction:column;flex:none;background:#fff;border-right:1px solid #f0f0f0}',
     '#gdshell-brand{height:76px;display:flex;align-items:center;padding:0 20px;gap:10px;font-size:16px;font-weight:600;',
     'border-bottom:1px solid #f5f5f5;white-space:nowrap}',
-    '#gdshell-brand-mark{width:24px;height:24px;display:grid;place-items:center;border-radius:6px;background:linear-gradient(135deg,#23c9f1,#7b76f5);',
-    'color:#fff;font-size:12px;font-weight:700}',
+    '#gdshell-brand-mark{width:24px;height:24px;flex:none}',
+    '#gdshell-brand-toggle{width:26px;height:26px;margin-left:8px;object-fit:contain}',
     '#gdshell-tabs{display:flex;flex:1;flex-direction:column;gap:4px;padding:28px 10px;overflow-y:auto}',
     '.gdshell-tab{position:relative;width:100%;min-height:44px;padding:0 14px 0 40px;border:0;border-radius:4px;background:transparent;',
     'color:#202020;cursor:pointer;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:14px;transition:background .15s,color .15s}',
     '.gdshell-tab::before{content:"";position:absolute;left:16px;top:50%;width:15px;height:15px;transform:translateY(-50%);border:1.5px solid currentColor;border-radius:3px;opacity:.72}',
     '.gdshell-tab:hover{background:#f7f7f7}',
     '.gdshell-tab.active{background:#f2f2f2;color:#202020;font-weight:600}',
+    '.gdshell-tab.gdshell-tab-analysis.active::before{width:20px;height:18px;border:0;border-radius:0;opacity:1;background:url("../../docs/design/shell_v1/icon_AI数据分析助手@2x.svg") center/contain no-repeat}',
     '.gdshell-tab:disabled{cursor:not-allowed;color:#bfbfbf}',
     '#gdshell-exit{height:64px;display:flex;align-items:center;gap:10px;padding:0 20px;border:0;border-top:1px solid #f0f0f0;background:#fff;',
     'color:#202020;cursor:pointer;text-align:left;font-size:14px}',
     '#gdshell-exit::before{content:"↪";font-size:22px;font-weight:300;line-height:1}',
     '#gdshell-workspace{display:flex;flex:1;min-width:0;flex-direction:column;background:#fff}',
-    '#gdshell-header{height:76px;display:flex;align-items:center;justify-content:space-between;padding:0 16px 0 24px;border-bottom:1px solid #f0f0f0;flex:none}',
-    '#gdshell-title{font-size:16px;font-weight:600;color:#202020;white-space:nowrap}',
-    '#gdshell-close{width:28px;height:28px;border:1px solid #ebebeb;border-radius:4px;background:#fff;color:#595959;cursor:pointer;font-size:20px;line-height:1}',
-    '#gdshell-close:hover{background:#f7f7f7;color:#202020}',
     '#gdshell-content{position:relative;flex:1;min-height:0;overflow:hidden;background:#fff}',
     '.gdshell-pane{position:absolute;inset:0;display:none;overflow:hidden}',
     '.gdshell-pane.active{display:block}',
@@ -153,6 +150,7 @@
 
     var button = document.createElement('button');
     button.className = 'gdshell-tab';
+    if (definition.title === '探索分析') button.classList.add('gdshell-tab-analysis');
     button.textContent = definition.title || definition.id;
     button.dataset.order = definition.order == null ? 99 : definition.order;
 
@@ -220,7 +218,6 @@
       if (previous.instance && typeof previous.instance.deactivate === 'function') previous.instance.deactivate();
     }
     activeId = id;
-    if (ui.title) ui.title.textContent = next.definition.title || next.definition.id;
     next.button.classList.add('active');
     next.pane.classList.add('active');
     if (next.status === 'registered') mount(next);
@@ -248,7 +245,6 @@
     ui.button.style.display = visible.length ? 'flex' : 'none';
     if ((!activeId || !tabs[activeId] || tabs[activeId].button.style.display === 'none') && visible.length) {
       activeId = visible[0].definition.id;
-      if (ui.title) ui.title.textContent = visible[0].definition.title || visible[0].definition.id;
       visible[0].button.classList.add('active');
       visible[0].pane.classList.add('active');
       if (ui.drawer.classList.contains('open')) mount(visible[0]);
@@ -322,15 +318,15 @@
     ui.drawer.id = 'gdshell-drawer';
     ui.drawer.innerHTML =
       '<aside id="gdshell-sidebar">' +
-      '  <div id="gdshell-brand"><span id="gdshell-brand-mark">AI</span><span>数据集助手</span></div>' +
+      '  <div id="gdshell-brand">' +
+      '    <img id="gdshell-brand-mark" src="../../docs/design/shell_v1/icon@2x.svg" alt="">' +
+      '    <span>数据集助手</span>' +
+      '    <img id="gdshell-brand-toggle" src="../../docs/design/shell_v1/icon_展开@2x.svg" alt="">' +
+      '  </div>' +
       '  <nav id="gdshell-tabs" role="tablist" aria-label="助手场景"></nav>' +
       '  <button id="gdshell-exit" type="button">退出插件</button>' +
       '</aside>' +
       '<section id="gdshell-workspace">' +
-      '  <header id="gdshell-header">' +
-      '    <span id="gdshell-title">数据集助手</span>' +
-      '    <button id="gdshell-close" type="button" aria-label="关闭助手">×</button>' +
-      '  </header>' +
       '  <main id="gdshell-content"></main>' +
       '</section>';
 
@@ -339,10 +335,8 @@
     document.body.appendChild(ui.drawer);
     ui.tabs = ui.drawer.querySelector('#gdshell-tabs');
     ui.content = ui.drawer.querySelector('#gdshell-content');
-    ui.title = ui.drawer.querySelector('#gdshell-title');
     ui.button.onclick = openShell;
     ui.overlay.onclick = closeShell;
-    ui.drawer.querySelector('#gdshell-close').onclick = closeShell;
     ui.drawer.querySelector('#gdshell-exit').onclick = closeShell;
     document.addEventListener('keydown', function (event) { if (event.key === 'Escape') closeShell(); });
 
