@@ -112,11 +112,7 @@
     'font-size:14px;color:#1e2a4a;}',
     '#gda-drawer *,#gda-drawer *::before,#gda-drawer *::after{box-sizing:border-box;margin:0;padding:0;}',
 
-    /* Header */
-    '#gda-header{padding:12px 16px;background:#fff;border-bottom:1px solid #c7d8fa;',
-    'display:flex;align-items:center;gap:10px;flex-shrink:0;',
-    'box-shadow:0 2px 8px rgba(37,99,235,.09);}',
-    '#gda-header-title{font-size:14px;font-weight:700;color:#2563eb;flex:1;}',
+    /* 会话状态：放在输入操作区，避免与 Shell 场景标题重复。 */
     '#gda-status-wrap{display:flex;align-items:center;gap:6px;}',
     '#gda-st{font-size:12px;color:#6b7a99;}',
     '#gda-dot{width:8px;height:8px;border-radius:50%;background:#6b7a99;flex-shrink:0;}',
@@ -248,6 +244,7 @@
 
     /* Input area */
     '#gda-input-area{padding:12px 14px 10px;background:#fff;flex-shrink:0;display:flex;flex-direction:column;}',
+    '#gda-input-toolbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}',
     '#gda-input-box{width:100%;',
     'background:linear-gradient(#fff,#fff) padding-box,',
     'linear-gradient(90deg,rgba(43,105,230,1),rgba(231,134,155,1)) border-box;',
@@ -293,8 +290,8 @@
     /* Clear button */
     '#gda-clear{display:flex;align-items:center;gap:5px;padding:5px 12px 5px 10px;',
     'border-radius:20px;border:1px solid #E4EAEE;background:#fff;color:#505050;',
-    'cursor:pointer;font-size:13px;font-family:inherit;align-self:flex-end;',
-    'margin-bottom:8px;transition:background .15s,border-color .15s;flex-shrink:0;}',
+    'cursor:pointer;font-size:13px;font-family:inherit;',
+    'transition:background .15s,border-color .15s;flex-shrink:0;}',
     '#gda-clear:hover{background:#f5f5f5;border-color:#c8c8c8;}',
   ].join('');
 
@@ -312,15 +309,13 @@
     var drawer = document.createElement('div');
     drawer.id = 'gda-drawer';
     drawer.innerHTML =
-      '<div id="gda-header">' +
-        '<span id="gda-header-title">💬 AI 数据分析助手</span>' +
+      '<div id="gda-chat"></div>' +
+      '<div id="gda-input-area">' +
+        '<div id="gda-input-toolbar">' +
         '<div id="gda-status-wrap">' +
           '<span id="gda-dot"></span>' +
           '<span id="gda-st">就绪</span>' +
         '</div>' +
-      '</div>' +
-      '<div id="gda-chat"></div>' +
-      '<div id="gda-input-area">' +
         '<button id="gda-clear" title="清空对话">' +
           '<svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">' +
             '<g stroke="#000" stroke-width="1.5" stroke-linejoin="round" opacity="0.4">' +
@@ -333,6 +328,7 @@
           '</svg>' +
           '清空对话' +
         '</button>' +
+        '</div>' +
         '<div id="gda-input-box">' +
           '<textarea id="gda-inp" placeholder="请输入问题，按 Enter 发送…"></textarea>' +
           '<div id="gda-input-footer">' +
@@ -1065,7 +1061,7 @@
   function _handleEvent(type, data) {
     switch (type) {
       case 'session.start':
-        _setStatus('run', '会话 ' + (data.session_id || '').slice(0, 8) + '…');
+        _setStatus('run', '会话已建立…');
         _reasoningBody = null;
         break;
       case 'agent.reasoning':
