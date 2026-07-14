@@ -72,13 +72,27 @@
   var launcherObserver = null;
   var launcherSyncQueued = false;
   var launcherHost = null;
+  var launcherHostStyle = null;
+
+  function restoreLauncherHostStyle() {
+    if (!launcherHost || !launcherHostStyle) return;
+    launcherHost.style.display = launcherHostStyle.display;
+    launcherHost.style.alignItems = launcherHostStyle.alignItems;
+    launcherHost.classList.remove('gdshell-launcher-host');
+    launcherHostStyle = null;
+  }
 
   function placeLauncherButton() {
     if (!ui.button) return;
     var host = document.querySelector(LAUNCHER_HOST_SELECTOR);
     if (host) {
-      if (launcherHost && launcherHost !== host) launcherHost.classList.remove('gdshell-launcher-host');
+      if (launcherHost && launcherHost !== host) restoreLauncherHostStyle();
+      if (launcherHost !== host) {
+        launcherHostStyle = { display: host.style.display, alignItems: host.style.alignItems };
+      }
       host.classList.add('gdshell-launcher-host');
+      host.style.display = 'flex';
+      host.style.alignItems = 'center';
       launcherHost = host;
       var breadcrumbList = host.querySelector('ol');
       if (breadcrumbList && breadcrumbList.parentNode) {
@@ -91,7 +105,7 @@
       ui.button.classList.add('gdshell-inline');
       return;
     }
-    if (launcherHost) launcherHost.classList.remove('gdshell-launcher-host');
+    restoreLauncherHostStyle();
     launcherHost = null;
     if (ui.button.parentNode !== document.body) document.body.appendChild(ui.button);
     ui.button.classList.remove('gdshell-inline');
