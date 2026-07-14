@@ -31,7 +31,7 @@
     'transition:opacity .25s;z-index:9998}',
     '#gdshell-overlay.open{opacity:1;pointer-events:auto}',
     '#gdshell-drawer{position:fixed;top:101px;right:0;bottom:0;width:min(800px,calc(100vw - 24px));display:flex;',
-    'background:#fff;transform:translateX(100%);transition:transform .25s;z-index:9999;',
+    'background:#fff;transform:translateX(100%);transition:transform .25s,width .2s;z-index:9999;',
     'box-shadow:-2px 0 12px rgba(0,0,0,.10);font-family:"PingFang SC","Microsoft YaHei",Arial,sans-serif;',
     'color:#202020;overflow:hidden}',
     '#gdshell-drawer.open{transform:translateX(0)}',
@@ -54,6 +54,7 @@
     'color:#202020;cursor:pointer;text-align:left;font-size:14px}',
     '#gdshell-exit::before{content:"↪";font-size:22px;font-weight:300;line-height:1}',
     '#gdshell-sidebar.gdshell-collapsed{width:48px}',
+    '#gdshell-drawer.gdshell-collapsed{width:48px}',
     '#gdshell-sidebar.gdshell-collapsed #gdshell-brand{justify-content:center;padding:0}',
     '#gdshell-sidebar.gdshell-collapsed #gdshell-brand-mark,#gdshell-sidebar.gdshell-collapsed #gdshell-brand > span:not(#gdshell-brand-toggle-frame){display:none}',
     '#gdshell-sidebar.gdshell-collapsed #gdshell-brand-toggle-frame{margin-left:0}',
@@ -381,6 +382,7 @@
     var sidebar = ui.sidebar;
     if (!sidebar) return;
     var collapsed = sidebar.classList.toggle('gdshell-collapsed');
+    ui.drawer.classList.toggle('gdshell-collapsed', collapsed);
     var toggle = sidebar.querySelector('#gdshell-brand-toggle-frame');
     toggle.setAttribute('aria-expanded', String(!collapsed));
     toggle.setAttribute('aria-label', collapsed ? '展开侧栏' : '收缩侧栏');
