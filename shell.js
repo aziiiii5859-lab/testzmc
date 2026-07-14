@@ -20,8 +20,9 @@
     'display:none;align-items:center;justify-content:center;background:#065bce;color:#fff;cursor:pointer;z-index:9997;',
     'box-shadow:0 4px 16px rgba(6,91,206,.28);font-size:14px;font-weight:600;transition:transform .2s,box-shadow .2s}',
     '#gdshell-btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(6,91,206,.36)}',
-    '#gdshell-btn.gdshell-inline{position:static;width:32px;height:32px;margin:0 14px 0 8px;flex:none;border-radius:4px;',
-    'box-shadow:none;font-size:12px;align-self:center;transform:none}',
+    'nav.ant-breadcrumb.gdshell-launcher-host{position:relative}',
+    '#gdshell-btn.gdshell-inline{position:absolute;top:20px;right:24px;width:32px;height:32px;margin:0;flex:none;border-radius:4px;',
+    'box-shadow:none;font-size:12px;transform:none}',
     '#gdshell-btn.gdshell-inline:hover{transform:none;box-shadow:none;background:#0753b9}',
     '#gdshell-overlay{position:fixed;inset:0;background:rgba(0,0,0,.16);opacity:0;pointer-events:none;',
     'transition:opacity .25s;z-index:9998}',
@@ -70,15 +71,21 @@
   var tokenPromise = null;
   var launcherObserver = null;
   var launcherSyncQueued = false;
+  var launcherHost = null;
 
   function placeLauncherButton() {
     if (!ui.button) return;
     var host = document.querySelector(LAUNCHER_HOST_SELECTOR);
     if (host) {
+      if (launcherHost && launcherHost !== host) launcherHost.classList.remove('gdshell-launcher-host');
       if (ui.button.parentNode !== host) host.appendChild(ui.button);
+      host.classList.add('gdshell-launcher-host');
+      launcherHost = host;
       ui.button.classList.add('gdshell-inline');
       return;
     }
+    if (launcherHost) launcherHost.classList.remove('gdshell-launcher-host');
+    launcherHost = null;
     if (ui.button.parentNode !== document.body) document.body.appendChild(ui.button);
     ui.button.classList.remove('gdshell-inline');
   }
