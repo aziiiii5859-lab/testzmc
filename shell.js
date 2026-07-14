@@ -249,7 +249,10 @@
       instance: null,
       controller: null,
     };
-    button.onclick = function () { activate(definition.id); };
+    button.onclick = function () {
+      if (ui.sidebar && ui.sidebar.classList.contains('gdshell-collapsed')) openShell();
+      activate(definition.id);
+    };
     insertTabButton(button);
     refreshVisibility();
   }
@@ -330,6 +333,7 @@
   }
 
   function openShell() {
+    setSidebarCollapsed(false);
     ui.overlay.classList.add('open');
     ui.drawer.classList.add('open');
     if (activeId && tabs[activeId] && tabs[activeId].status === 'registered') mount(tabs[activeId]);
@@ -378,15 +382,20 @@
     refreshVisibility();
   }
 
-  function toggleSidebar() {
+  function setSidebarCollapsed(collapsed) {
     var sidebar = ui.sidebar;
     if (!sidebar) return;
-    var collapsed = sidebar.classList.toggle('gdshell-collapsed');
+    sidebar.classList.toggle('gdshell-collapsed', collapsed);
     ui.drawer.classList.toggle('gdshell-collapsed', collapsed);
+    ui.overlay.classList.toggle('open', !collapsed);
     var toggle = sidebar.querySelector('#gdshell-brand-toggle-frame');
     toggle.setAttribute('aria-expanded', String(!collapsed));
     toggle.setAttribute('aria-label', collapsed ? '展开侧栏' : '收缩侧栏');
     toggle.title = collapsed ? '展开侧栏' : '收缩侧栏';
+  }
+
+  function toggleSidebar() {
+    setSidebarCollapsed(!ui.sidebar.classList.contains('gdshell-collapsed'));
   }
 
   function createUI() {
